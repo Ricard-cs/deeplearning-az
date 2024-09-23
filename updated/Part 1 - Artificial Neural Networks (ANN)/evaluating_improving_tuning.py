@@ -110,7 +110,7 @@ cm = confusion_matrix(y_test, y_pred)
 # Part 4 - Evaluating, Improving and Tuning the ANN
 
 # Evaluating the ANN
-from keras.wrappers.scikit_learn import KerasClassifier
+from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import cross_val_score
 from keras.models import Sequential
 from keras.layers import Dense
@@ -130,7 +130,7 @@ variance = accuracies.std()
 # Dropout Regularization to reduce overfitting if needed
 
 # Tuning the ANN
-from keras.wrappers.scikit_learn import KerasClassifier
+from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from keras.models import Sequential
 from keras.layers import Dense
