@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Importing the dataset
-dataset = pd.read_csv('Churn_Modelling.csv')
+dataset = pd.read_csv('updated\Part 1 - Artificial Neural Networks (ANN)\Churn_Modelling.csv')
 X = dataset.iloc[:, 3:13].values
 y = dataset.iloc[:, 13].values
 
@@ -27,9 +27,22 @@ labelencoder_X_1 = LabelEncoder()
 X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
 labelencoder_X_2 = LabelEncoder()
 X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-onehotencoder = OneHotEncoder(categorical_features = [1])
-X = onehotencoder.fit_transform(X).toarray()
+
+
+from sklearn.compose import ColumnTransformer
+ 
+transformer = ColumnTransformer(
+    transformers=[
+        ("Churn_Modelling",        # Un nombre de la transformación
+         OneHotEncoder(categories='auto'), # La clase a la que transformar
+         [1]            # Las columnas a transformar.
+         )
+    ], remainder='passthrough'
+)
+ 
+X = transformer.fit_transform(X)
 X = X[:, 1:]
+
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
@@ -67,7 +80,7 @@ classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'si
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
 
 # Fitting the ANN to the Training set
-classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
+classifier.fit(X_train, y_train, batch_size = 10, epochs = 5)
 
 # Part 3 - Making predictions and evaluating the model
 
@@ -108,7 +121,7 @@ def build_classifier():
     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
     classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     return classifier
-classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100)
+classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 5)
 accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10, n_jobs = -1)
 mean = accuracies.mean()
 variance = accuracies.std()
@@ -130,7 +143,7 @@ def build_classifier(optimizer):
     return classifier
 classifier = KerasClassifier(build_fn = build_classifier)
 parameters = {'batch_size': [25, 32],
-              'epochs': [100, 500],
+              'epochs': [5, 8],
               'optimizer': ['adam', 'rmsprop']}
 grid_search = GridSearchCV(estimator = classifier,
                            param_grid = parameters,
