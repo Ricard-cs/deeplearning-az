@@ -86,5 +86,9 @@ parameters = {'batch_size': [25, 32],
 grid_search = GridSearchCV(estimator = classifier,
                            param_grid = parameters,
                            scoring = 'accuracy',
-                           cv = 10, error_score='raise')
+                           cv = 10, error_score='raise', verbose=3)
 grid_search = grid_search.fit(X_train, y_train)
+best_parameters = grid_search.best_params_
+best_accuracy = grid_search.best_score_
+print(best_parameters)
+print(best_accuracy)
