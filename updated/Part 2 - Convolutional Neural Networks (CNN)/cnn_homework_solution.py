@@ -12,11 +12,30 @@
 # Part 1 - Building the CNN
 
 # Importing the Keras libraries and packages
-from keras.models import Sequential
-from keras.layers import Conv2D
-from keras.layers import MaxPooling2D
-from keras.layers import Flatten
-from keras.layers import Dense
+#from keras.models import Sequential
+#from keras.layers import Conv2D
+#from keras.layers import MaxPooling2D
+#from keras.layers import Flatten
+#from keras.layers import Dense
+
+
+import tensorflow as tf
+
+# Lista de dispositivos físicos disponibles
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    print(f"TensorFlow detectó {len(gpus)} GPU(s):")
+    for gpu in gpus:
+        print(gpu)
+else:
+    print("No se detectaron GPUs. Asegúrate de que los controladores y bibliotecas estén instalados correctamente.")
+
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.layers import MaxPooling2D
+from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Dense
 
 # Initialising the CNN
 classifier = Sequential()
@@ -64,7 +83,7 @@ test_set = test_datagen.flow_from_directory('updated/Part 2 - Convolutional Neur
                                             class_mode = 'binary')
 
 classifier.fit(training_set,
-                         steps_per_epoch = 8,
+                         steps_per_epoch = 8000,
                          epochs = 25,
                          validation_data = test_set,
                          validation_steps = 2000)
@@ -72,7 +91,8 @@ classifier.fit(training_set,
 # Part 3 - Making new predictions
 
 import numpy as np
-from keras.preprocessing import image
+from tensorflow.keras.preprocessing import image
+#from keras.preprocessing import image
 test_image = image.load_img('updated/Part 2 - Convolutional Neural Networks (CNN)/dataset/single_prediction/cat_or_dog_2.jpg', target_size = (64, 64))
 test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis = 0)
